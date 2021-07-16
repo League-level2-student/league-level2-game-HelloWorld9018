@@ -3,6 +3,7 @@
 class ObjectMotion {
 
   boolean characterMoving = false;
+  boolean gameEnded = false;
 
   covidMonster monster; 
 
@@ -197,24 +198,25 @@ class ObjectMotion {
   ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-
+//DELETE THIS...
   void switchScreenState() {
     //println(key);
-    if (key == ENTER) {
+    if (keyPressed) {
 
-      if (keyPressed) {
+      if (key == ENTER) {
 
 
 
-        if (currentState == END) {
+       /* if (currentState == END) {
           //reset variables
           currentState = MENU;
         } else {
           currentState++;
-        }
+        }*/
 
         //println(currentState);
-        setup();
+        //setup();
+        //updateCurrentState();
       }
     }
   }
@@ -295,10 +297,7 @@ class ObjectMotion {
        // println("monster is within attack range");
         monster.withinRange=true;
 
-        //if(keyReleased){
-
-        //}
-        //monster.monsterHealth -=  10;
+        
       }
     } else {
      // println("A monster is out of range");
@@ -312,7 +311,7 @@ class ObjectMotion {
 
     if (characterBox.collisionBox.intersects(monster.monsterBox.collisionBox) && monster.canAttack == true) {
       //character Hp decreases
-//ADJUST THE AMOUNT OF DAMAGE THE CHARACTER RECEIVES. RN CHARACTER GETS DAMAGED X2 FOR EVERY TIME A COVIS PASSES. ALSO, THE COVID IS NOT ABLE TO ATTACK AGAIN FOR UNKNOWN REASONS. FIX!!!!!!!!!!
+
 //NEXT: SOUND EFFECTS AND VISUAL HP BAR(S). COMPLETE SCREEN STATES
         characterHealth--;
         monster.canAttack = false;
@@ -321,7 +320,7 @@ class ObjectMotion {
 
         time4 = millis();
 
-       // monster.canAttack = true;
+      
         
       }*/
     }
@@ -330,9 +329,10 @@ class ObjectMotion {
       monster.canAttack = true;
     }
 
-    if (characterHealth <=0) {
+    if (characterHealth <=0 && !gameEnded) {
       //end game screen
-      // currentState = END;
+      gameEnded = true;
+      currentState++;
     }
   }
 

@@ -46,6 +46,7 @@ class SpecialEffects {
     image(heart, 980, 25);
     //MAKE GAME RUN SMOOTHER, THEN LOOP MUSIC AND ADD SOUND EFFECTS
     textSize(25);
+    //Change text font to ariel
     text(characterHealth, healthTextX, 61);
     
   }

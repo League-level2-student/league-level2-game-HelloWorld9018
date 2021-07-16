@@ -1,3 +1,9 @@
+//sound
+
+import ddf.minim.*;
+Minim minim = new Minim(this);
+AudioPlayer bgMusic;
+
 
 //Images
 
@@ -10,6 +16,12 @@ PImage covidMonster;
 PImage healthBar;
 PImage heart;
 
+PImage menuPic;
+PImage endPic;
+
+PImage gameOverText;
+PImage trophy;
+
 //Booleans
 
 boolean RightVisable = true;
@@ -21,6 +33,11 @@ boolean airDriftR;
 boolean airDriftL;
 
 boolean attacked = false;
+
+boolean newHighScore = false;
+
+boolean drawingInstructions = false;
+int timesTABpressed = 0;
 
 int score = 0;
 int backgroundX = 0;
@@ -55,13 +72,31 @@ int characterHitBoxSize = 110;
 
 int characterHealth = 30;
 
+int scoreHolder = 0;
+
+int highScore;
+
 final int MENU = 0;
 final int GAME = 1;
 final int END = 2;
 
-int currentState = GAME;
+final int INSTRUCTIONS = 6;
+
+int currentState = MENU;
 
 int healthTextX;
+
+PFont tittleFont;
+PFont gameFont1;
+PFont gameFont2;
+PFont endFont;
+PFont startFont;
+PFont objectiveFont;
+PFont highScoreFont;
+PFont scoreFont;
+PFont instructionsFont;
+
+
 
 //class objects
 
@@ -75,27 +110,55 @@ SpecialEffects effects = new SpecialEffects();
 void setup() {
 
   frameRate(70);
-  spawner.initialSpawn();
+  //spawner.initialSpawn();
   size(1252, 626);
 
   time = millis();
   
-  healthTextX = 995;
+  
+  
+  bgMusic = minim.loadFile("Action-background.mp3");
+  
+  //bgMusic.loop();
+  
   
 }
 
 
 
 void draw() {
-
-  //Movement of background
-  //println(deviation);
+  
+  //motion.switchScreenState();
+  
+  
+  if(currentState == MENU && drawingInstructions == true){
+    spawner.drawInstructions();
+  }
+  
+  if(currentState == MENU && !drawingInstructions){
+     spawner.resetGame();
+     // background(255, 0, 0);
+      spawner.drawMenu();
+      //spawner.isReset = false;
+    
+    if(bgMusic.isPlaying()){
+      bgMusic.pause();
+      bgMusic.rewind();
+    }
+  }
+  
   if (currentState== GAME) {
+    
+    
+    spawner.initialSpawn();
 
     motion.backgroundMovement();
 
     fill(0, 0, 0);
-    textSize(50);
+    gameFont1 = createFont("Tahoma", 50);
+      textFont(gameFont1);
+    //textSize(50);
+    //change text font to arial
     text(" = " + score, 50, 50);
     
 
@@ -111,6 +174,20 @@ void draw() {
     effects.displayHealth();
     
   }
+  
+  else if(currentState == END){
+        if(bgMusic.isPlaying()){
+      bgMusic.pause();
+      bgMusic.rewind();
+    }
+    
+  spawner.drawEnd();
+ 
+   //spawner.resetGame();
+   spawner.isReset = false;
+ 
+  }
+  
   motion.jump();
   //inputManager.keyPressed();
 
@@ -124,21 +201,11 @@ void keyPressed() {
   if (key == CODED) {
 
     motion.characterActions();
-    //.updateLocation();
+    
   }
-  motion.switchScreenState();
-
- /* for (int i = 0; i < motion.monsters.size(); i++) {
-
-      if (keyCode == TAB && motion.monsters.get(i).withinRange == true) {
-        
-            motion.monsters.get(i).monsterHealth = motion.monsters.get(i).monsterHealth - 10;
-            println("......................................................ATTACK");
-        
-      
-      }
-    }
-    */
+  
+  
+  
 }
 
 //   ATTACK ONLY WITHIN RANGE USING CHECK INTERSECTION METHOD. CHECK INTERSECTION FOR EACH COVID MONSTER USING MONSTERS.GET(I) AND THE FOR LOOP INSIDE MONSTERMOVENT METHOD IN THE OBJECT MOTION CLASS. 
@@ -148,11 +215,36 @@ void keyReleased() {
   //if (key == CODED) {
     for (int i = 0; i < motion.monsters.size(); i++) {
 
-      if (keyCode == TAB && motion.monsters.get(i).withinRange == true) {
+      if (key == 32 && motion.monsters.get(i).withinRange == true) {
 
         motion.monsters.get(i).monsterHealth = motion.monsters.get(i).monsterHealth - 1;
         println("......................................................ATTACK");
       }
     }
   //}
+  if(key == ENTER){
+    if (currentState == END) {
+          
+          currentState = MENU;
+        } else {
+          currentState++;
+        }
+  }
+  
+  
+  //SHOW INSTRUCTIONS WHEN TAB IS PRESSED, EXIT INSTRUCTOINS WHEN TAB IS PRESSED A SECOND TIME. ONLY HAPPEN WHEN ON MENU SCREEN. not working rn
+  
+  if(keyCode == TAB && timesTABpressed == 0){
+    println("TAB is being pressed: " + timesTABpressed + " , "+drawingInstructions);
+    
+    timesTABpressed = 1;
+    drawingInstructions = true;
+
+  }
+  
+   if(keyCode == TAB && timesTABpressed == 1){
+     
+     timesTABpressed = 0;
+     drawingInstructions = false;
+   }
 }
