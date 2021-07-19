@@ -14,7 +14,7 @@ class ObjectMotion {
   int newToiletX;
   SpawnObjects objectGenerator = new SpawnObjects();
   CollisionManager toiletBox = new CollisionManager(newToiletX, toiletY, toiletHitBoxSize, toiletHitBoxSize);
-  CollisionManager characterBox = new CollisionManager(characterX, characterY, characterHitBoxSize, characterHitBoxSize);
+  CollisionManager characterBox = new CollisionManager(characterX, characterY, characterHitBoxSize + 10, characterHitBoxSize);
 
 
 
@@ -42,7 +42,7 @@ class ObjectMotion {
     newToiletX = toiletX+ 1252 + deviation;
 
     toiletBox.updateLocation(newToiletX, toiletY, toiletHitBoxSize, toiletHitBoxSize);
-    characterBox.updateLocation(characterX+95, characterY+80, characterHitBoxSize, characterHitBoxSize+50);
+    characterBox.updateLocation(characterX+95, characterY+80, characterHitBoxSize + 10, characterHitBoxSize+50);
 
 
     // println(newToiletX);
@@ -265,8 +265,8 @@ class ObjectMotion {
 
 
       monster.secondBox.setBounds(monster.x-200, monster.y, 50+400, 50);
-     // rect(monster.x-200, monster.y, 50+400, 50);
-
+     
+      //rect(monster.x+25-200, monster.y, 400, 50); //***
       monster.monsterBox.updateLocation(monster.x, monster.y, 50, 50);
       monster.testDraw();
 
@@ -291,9 +291,14 @@ class ObjectMotion {
 
   void checkMonsterIntersection(covidMonster monster) {
 
+    
+    
     if (characterBox.collisionBox.intersects(monster.secondBox)) {
-
-      if (RightVisable && monster.x > characterX || !RightVisable && monster.x < characterX) {
+      
+      //ADJUST the covid's secondBox to create a wide enough attack range that is even on both left and right. WORK ON THIS, LAST STEP!!!! THEN REMOVE RECTANGLES.
+     
+      if (RightVisable && monster.x > characterX+240 || RightVisable == false && monster.x+50 < characterX+55) {
+        
        // println("monster is within attack range");
         monster.withinRange=true;
 

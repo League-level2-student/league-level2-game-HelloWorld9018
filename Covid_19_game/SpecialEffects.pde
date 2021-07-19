@@ -6,8 +6,10 @@ class SpecialEffects {
 
     if (RightVisable == true) {
       image(RIGHTcharacter, characterX, characterY);
+      image(sprayR, characterX+200, characterY + 150);
     } else {
       image(LEFTcharacter, characterX, characterY);
+      image(sprayL, characterX + 45, characterY + 150);
     }
   }
 

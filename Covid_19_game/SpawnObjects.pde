@@ -50,6 +50,11 @@ class SpawnObjects {
 
       healthTextX = 998;
 
+      sprayR = loadImage("sprayR.png");
+      sprayL = loadImage("disinfectantSpray_Lvl2.png");
+      
+      sprayR.resize(60, 60);
+      sprayL.resize(60, 60);
 
       bgMusic.loop();
     }
@@ -125,12 +130,14 @@ class SpawnObjects {
       fill(0, 0, 0);
       tittleFont = createFont("Segoe Print Bold", 75);
 
-      startFont  = createFont("Verdana", 45);
+      startFont  = createFont("Verdana Bold", 45);
 
-      objectiveFont = createFont("Verdana", 30);
+      objectiveFont = createFont("Verdana Bold", 45);
+      
+      menuMusic.loop();
     }
 
-    /*for (String s : PFont.list()) {
+   /* for (String s : PFont.list()) {
       println(s);
     }*/
 
@@ -140,12 +147,16 @@ class SpawnObjects {
     textFont(startFont);
     text("Press ENTER to start", 380, 300);
     textFont(objectiveFont);
-    text("OBJECTIVE: hoard the toilet paper. \n       Press space to attack.", 370, 450);
+    text("Press TAB for instructions", 320, 450);
     //COMPLETE DRAW MENU, "ENTER TO START" "OBJECTIVE: HOARD THE TOILET PAPER"
   }
 
   void drawEnd() {
     if (!endLoaded) {
+      
+      gameOverSound.trigger();
+      newBest = loadImage("newHighScore.png");
+      newBest.resize(130, 120);
       endPic = loadImage("endBackground.jpg");
       endPic.resize(1252, 700);
 
@@ -194,6 +205,8 @@ class SpawnObjects {
       endLoaded = true;
     }
 
+
+    
     image(endPic, 0, 0);
     image(gameOverText, 370, 0);
     image(trophy, 410, 460);
@@ -202,23 +215,32 @@ class SpawnObjects {
     text("Press ENTER to restart ", 410, 390);
     textFont(highScoreFont);
     fill(225, 225, 225);
-    text("HIGH SCORE: " + highScore, 490, 510);
+    text("BEST SCORE: " + highScore, 490, 510);
     textFont(scoreFont);
     text("Score: " + score, 490, 560);
+    
+    if(newHighScore){
+      image(newBest, 750, 400);
+    }
+    
   }
 
   void drawInstructions(){
     
     if(!instructionsLoaded){
       instructionsFont = createFont("Verdana", 30);
+      exitFont = createFont("Verdana", 20);
       instructionsLoaded = true;
     }
-    background(225, 225, 225);
+    background(175, 225, 227);
     
     textFont(instructionsFont); 
     
-    text("OBJECTIVE: hoard the toilet paper. \n       Press space to attack.", 370, 450);
+    text("OBJECTIVE: hoard the toilet paper. \n       Press space to attack.", 380, 100);
     
+    textFont(exitFont);
+
+    text("Press TAB to return to menu", 500, 600);
   }
 
   void resetGame() {
@@ -226,7 +248,8 @@ class SpawnObjects {
       isReset = true;
 
       isInitialized = false;
-      bgMusic.loop();
+    //  bgMusic.loop();
+    //  menuMusic.loop();
       motion.monsters.clear();
       characterHealth = 30;
       newHighScore = false;

@@ -23,7 +23,7 @@ class covidMonster{
     monsterBox = new CollisionManager(x, y, 50, 50);
    // image(covidMonster, x, y);
    
-    secondBox = new Rectangle(x-200, y, 50+400, 50);
+    secondBox = new Rectangle(x+25-200, y, 400, 50);
    
    monsterHealth = 8;
    

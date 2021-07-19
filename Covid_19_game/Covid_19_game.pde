@@ -3,7 +3,9 @@
 import ddf.minim.*;
 Minim minim = new Minim(this);
 AudioPlayer bgMusic;
-
+AudioSample spraySoundEffect;
+AudioPlayer menuMusic;
+AudioSample gameOverSound;
 
 //Images
 
@@ -12,6 +14,7 @@ PImage RIGHTcharacter;
 PImage LEFTcharacter;
 PImage toiletPaper;
 PImage covidMonster;
+PImage newBest;
 
 PImage healthBar;
 PImage heart;
@@ -21,6 +24,9 @@ PImage endPic;
 
 PImage gameOverText;
 PImage trophy;
+
+PImage sprayR;
+PImage sprayL;
 
 //Booleans
 
@@ -95,7 +101,7 @@ PFont objectiveFont;
 PFont highScoreFont;
 PFont scoreFont;
 PFont instructionsFont;
-
+PFont exitFont;
 
 
 //class objects
@@ -118,9 +124,9 @@ void setup() {
   
   
   bgMusic = minim.loadFile("Action-background.mp3");
-  
-  //bgMusic.loop();
-  
+  spraySoundEffect = minim.loadSample("bottle-spray.wav");
+  menuMusic  = minim.loadFile("Game-Menu_Looping.mp3");
+  gameOverSound = minim.loadSample("Bells2.mp3");
   
 }
 
@@ -130,8 +136,7 @@ void draw() {
   
   //motion.switchScreenState();
   
-  
-  if(currentState == MENU && drawingInstructions == true){
+  if(currentState == MENU && drawingInstructions){
     spawner.drawInstructions();
   }
   
@@ -149,7 +154,10 @@ void draw() {
   
   if (currentState== GAME) {
     
-    
+    if(menuMusic.isPlaying()){
+      menuMusic.pause();
+      menuMusic.rewind();
+    }
     spawner.initialSpawn();
 
     motion.backgroundMovement();
@@ -215,36 +223,34 @@ void keyReleased() {
   //if (key == CODED) {
     for (int i = 0; i < motion.monsters.size(); i++) {
 
-      if (key == 32 && motion.monsters.get(i).withinRange == true) {
-
+      if (key == 32) {
+        spraySoundEffect.trigger();
+        if(motion.monsters.get(i).withinRange == true){
         motion.monsters.get(i).monsterHealth = motion.monsters.get(i).monsterHealth - 1;
         println("......................................................ATTACK");
+        }
       }
     }
   //}
   if(key == ENTER){
-    if (currentState == END) {
+    if (currentState == MENU) {
           
+          currentState = GAME;
+        } else if (currentState == END) {
           currentState = MENU;
-        } else {
-          currentState++;
         }
   }
   
   
-  //SHOW INSTRUCTIONS WHEN TAB IS PRESSED, EXIT INSTRUCTOINS WHEN TAB IS PRESSED A SECOND TIME. ONLY HAPPEN WHEN ON MENU SCREEN. not working rn
   
-  if(keyCode == TAB && timesTABpressed == 0){
-    println("TAB is being pressed: " + timesTABpressed + " , "+drawingInstructions);
+  
+  if(keyCode == TAB){
     
-    timesTABpressed = 1;
-    drawingInstructions = true;
+    //timesTABpressed = 1;
+    drawingInstructions = !drawingInstructions;
+   // println("TAB is being pressed: " + timesTABpressed + " , "+drawingInstructions);
+    
 
   }
   
-   if(keyCode == TAB && timesTABpressed == 1){
-     
-     timesTABpressed = 0;
-     drawingInstructions = false;
-   }
 }
